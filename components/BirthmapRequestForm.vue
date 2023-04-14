@@ -165,7 +165,7 @@ const searchCity = async () => {
   page.value.loading = true
 
   const {data: cityList} = await useFetch('/client/v1/location', {
-    baseURL: `https://api.sarakoimbra.com.br:5000`,
+    baseURL: `https://api.sarakoimbra.com.br`,
     query: {
       city: page.value.cityFindInput
     }

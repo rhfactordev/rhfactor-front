@@ -53,7 +53,7 @@ onMounted(async ()=>{
   console.log('Iniciar importação')
 
   await $fetch(`/workers/birthmap/${id.value}`, {
-    baseURL: `http://localhost:5000`,
+    baseURL: `https://api.sarakoimbra.com.br`,
     method: 'GET',
     query: {
       domain: `sarakoimbra.com.br`

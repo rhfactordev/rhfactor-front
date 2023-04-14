@@ -74,14 +74,14 @@ const reDatetime = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d/
 const r = useRouter()
 
 const page = ref({
-  cityFindInput: "Santo André",
+  cityFindInput: "",
   cityList: [],
   selectedCity: {},
   signupForm: {
-    name: "Roberto Fonseca",
-    email: "roberto@rhfactor.com.br",
-    city: "1",
-    birthDate: "1986-07-03T10:15",
+    name: "",
+    email: "",
+    city: "",
+    birthDate: "",
     serviceId: 2,
     accpetedTerms: true
   },
@@ -130,7 +130,7 @@ const submit = async () => {
   page.value.loading = true
 
   const { returnId } = await $fetch('/client/v1/signup/birthmap/request', {
-    baseURL: `http://localhost:5000`,
+    baseURL: `https://api.sarakoimbra.com.br`,
     method: 'post',
     query: {
       domain: `sarakoimbra.com.br`
@@ -165,7 +165,7 @@ const searchCity = async () => {
   page.value.loading = true
 
   const {data: cityList} = await useFetch('/client/v1/location', {
-    baseURL: `http://localhost:5000`,
+    baseURL: `https://api.sarakoimbra.com.br:5000`,
     query: {
       city: page.value.cityFindInput
     }

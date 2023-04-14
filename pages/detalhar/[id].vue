@@ -22,7 +22,7 @@ const loadPageInfo = async () => {
   loading.value = true
 
   birthmap.value = await $fetch(`/client/v1/birthmap/${id.value}/public`, {
-    baseURL: `http://localhost:5000`,
+    baseURL: `https://api.sarakoimbra.com.br`,
     method: 'GET',
     query: {
       domain

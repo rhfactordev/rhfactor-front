@@ -1,35 +1,36 @@
 <template>
 
   <form class="needs-validation" v-if="hasServiceId">
-    <div class="form-group">
-      Nome <i>*</i>
-      <input type="text" class="form-control mt-1" name="name" required placeholder="Nome"
-             v-model="page.signupForm.name">
+
+    <div class="mb-3">
+      <label for="birthRequestFormFieldName" class="form-label">Nome *</label>
+      <input type="text" class="form-control" id="birthRequestFormFieldName" name="name" required placeholder="Nome" v-model="page.signupForm.name">
     </div>
 
-    <div class="form-group">
-      E-mail <i>*</i>
-      <input type="email" class="form-control mt-1" name="email" required placeholder="email@domínio.com.br"
-             v-model="page.signupForm.email">
+    <div class="mb-3">
+      <label for="birthRequestFormFieldEmail" class="form-label">E-mail *</label>
+      <input type="email" class="form-control" id="birthRequestFormFieldEmail" name="email" required placeholder="email@domínio.com.br" v-model="page.signupForm.email">
     </div>
 
-    <div class="form-group">
-      Data e Hora de Nascimento <i>*</i>
-      <input type="datetime-local" class="form-control mt-1" required placeholder="Data e Hora de nascimento"
+    <div class="mb-3">
+      <label for="birthRequestFormFieldEmail" class="form-label">Data e hora de nascimento *</label>
+      <input type="datetime-local" class="form-control" required
+             id="birthRequestFormFieldEmail"
+             placeholder="Data e Hora de nascimento"
              name="birthdate" v-model="page.signupForm.birthDate">
     </div>
 
-    <div>
-      Digite o nome de sua Cidade de Nascimento e clique em buscar para selecionar <i>*</i>
-      <div v-if="showCityFindInput" class="input-group mb-3 mt-1">
-        <input type="text" v-model.lazy="page.cityFindInput" id="city" class="form-control" name="city"
-               placeholder="Cidade de Nascimento">
-        <div class="input-group-append">
+    <div v-if="showCityFindInput" class="mb-3">
+      <label for="birthRequestFormFieldCity" class="form-label">Cidade de Nascimento *</label>
+      <div class="input-group">
+        <input type="text" id="birthRequestFormFieldCity" v-model.lazy="page.cityFindInput" class="form-control" name="city" placeholder="Cidade de Nascimento">
+        <div class="input-group-text">
           <button type="button" :disabled="page.loading" @click="searchCity" class="input-group-text" id="basic-addon2">
             <i v-if="!page.loading" class="fa-solid fa-search">Buscar</i>
             <i v-else class="fa-solid fa-spinner">*</i>
           </button>
         </div>
+        <small v-if="showCityDescription">Digite o nome de sua Cidade de Nascimento e clique em buscar para selecionar.</small>
       </div>
     </div>
 
@@ -38,26 +39,28 @@
           class="list-group-item list-group-item-action">{{ item.label }}
       </li>
     </ul>
-    <div v-else class="input-group mb-3">
+    <div v-else class="mb-3 input-group">
       <input type="text" class="form-control" disabled v-model="page.selectedCity.label">
-      <div class="input-group-append">
+      <div class="input-group-text">
         <button @click="clearSelectedCity" class="input-group-text" id="basic-addon2">
           <i class="fa-solid fa-trash">X</i>
         </button>
       </div>
     </div>
 
-    <div class="form-group form-check">
+    <div class="form-check mb-3">
       <input type="checkbox" class="form-check-input" v-model="page.signupForm.accpetedTerms" id="exampleCheck1">
       <label class="form-check-label" for="exampleCheck1">
         Eu autorizo o compartilhamento dos meus dados com a equipe do site {{ siteDomain }}
       </label>
     </div>
 
-    <button :disabled="page.loading" type="submit" class="btn btn-primary btn-lg btn-block p-3"
-            @click.stop.prevent="submit()">
-      <span class="h2 text-white">Gerar mapa astral</span>
-    </button>
+    <div class="d-grid gap-2">
+      <button :disabled="page.loading" type="submit" class="btn btn-primary btn-lg p-3"
+              @click.stop.prevent="submit()">
+        <span class="h2 text-white">Gerar mapa astral</span>
+      </button>
+    </div>
 
   </form>
 
@@ -79,7 +82,7 @@ const page = ref({
     email: "roberto@rhfactor.com.br",
     city: "1",
     birthDate: "1986-07-03T10:15",
-    serviceId: 1,
+    serviceId: 2,
     accpetedTerms: true
   },
   loading: false
@@ -87,6 +90,10 @@ const page = ref({
 
 const showCityFindInput = computed(() => {
   return page.value.selectedCity.value == null
+})
+
+const showCityDescription = computed(()=>{
+  return page.value.selectedCity.value == null && page.value.cityList.length == 0
 })
 
 const hasServiceId = computed(() => {
@@ -122,31 +129,28 @@ const submit = async () => {
   // page.value.signupForm.serviceId = page.value.serviceId
   page.value.loading = true
 
-  const {data} = await useAsyncData(() => $fetch(`/api/birthmap/create?city=${page.value.cityFindInput}`, {
+  const { returnId } = await $fetch('/client/v1/signup/birthmap/request', {
+    baseURL: `http://localhost:5000`,
     method: 'post',
+    query: {
+      domain: `sarakoimbra.com.br`
+    },
     body: {
-      data: {
-        name: page.value.signupForm.name,
-        email: page.value.signupForm.email,
-        birthdate: page.value.signupForm.birthDate,
-        birthplaceId: page.value.signupForm.city,
-        serviceId: page.value.signupForm.serviceId,
-        accpetedTerms: page.value.signupForm.accpetedTerms
-      }
+      name: page.value.signupForm.name,
+      email: page.value.signupForm.email,
+      birthdate: page.value.signupForm.birthDate,
+      birthplaceId: page.value.signupForm.city,
+      serviceId: page.value.signupForm.serviceId,
+      accpetedTerms: page.value.signupForm.accpetedTerms
     }
-  }))
+  }).catch(e=>{
+    alert('Houve um erro ao gerar seu mapa!')
+    console.log('Erro', e)
+    return
+  }).then(res => res)
 
-  r.push('/carregar')
-
-
-  // page.value.$axios.post(`/client/v1/signup/birthmap?domain=${process.env.VUE_APP_DOMAIN}`, ).then((res) => {
-  //   page.value.$router.push(`/checkout/${res.data.returnId}/pagamento`)
-  // }).catch(e => {
-  //   console.log("Ops! Houve um erro ao enviar seu formulário. \n Recarregue a página e tente novamente!", e)
-  //   alert('Houve um erro ao criar seu pedido!')
-  // }).finally(() => {
   page.value.loading = false
-  // });
+  r.push(`/import/${returnId}?name=${page.value.signupForm.name}`)
 }
 
 const selectCity = (city) => {
@@ -160,9 +164,14 @@ const searchCity = async () => {
   }
   page.value.loading = true
 
-  const {data} = await useAsyncData(() => $fetch(`/api/location?city=${page.value.cityFindInput}`))
+  const {data: cityList} = await useFetch('/client/v1/location', {
+    baseURL: `http://localhost:5000`,
+    query: {
+      city: page.value.cityFindInput
+    }
+  })
 
-  page.value.cityList = data
+  page.value.cityList = cityList
   page.value.loading = false
 }
 

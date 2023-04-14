@@ -30,7 +30,7 @@
             <i v-else class="fa-solid fa-spinner">*</i>
           </button>
         </div>
-        <small v-if="showCityDescription">Digite o nome de sua Cidade de Nascimento e clique em buscar para selecionar.</small>
+        <p v-if="showCityDescription">Digite o nome de sua Cidade de Nascimento e clique em buscar para selecionar.</p>
       </div>
     </div>
 

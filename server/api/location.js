@@ -1,3 +1,9 @@
 export default defineEventHandler(async (event) => {
-    return [{label: "Santo André, São Paulo - BR", value: "1"}]
+
+    const query = getQuery(event)
+
+    console.log('Chamar evento')
+
+
+
 });

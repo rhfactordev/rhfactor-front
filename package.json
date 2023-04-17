@@ -4,13 +4,11 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
-    "start": "node server/index.mjs",
+    "start": "nuxt start",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "heroku-postbuild": "npm run build",
-    "lint": "eslint .",
-    "typecheck": "vue-tsc --noEmit"
+    "heroku-postbuild": "npm run build"
   },
   "devDependencies": {
     "nuxt": "^3.3.3"

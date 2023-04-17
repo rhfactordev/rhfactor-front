@@ -15,7 +15,7 @@ frontend:
         - yarn run generate
   artifacts:
     # IMPORTANT - Please verify your build output directory
-    baseDirectory: dist
+    baseDirectory: .output
     files:
       - '**/*'
   cache:

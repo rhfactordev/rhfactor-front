@@ -13,7 +13,7 @@ frontend:
         - echo "VUE_APP_USERKEY=$VUE_APP_USERKEY" >> .env
         - yarn build
   artifacts:
-    baseDirectory: dist
+    baseDirectory: .output/
     files:
       - '**/*'
   cache:
